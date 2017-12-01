@@ -1,0 +1,49 @@
+{
+  "name": "bitcoin-graph",
+  "version": "0.0.0",
+  "license": "MIT",
+  "angular-cli": {},
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "test": "ng test",
+    "build": "ng build && node server.js",
+    "pree2e": "webdriver-manager update --standalone false --gecko false",
+    "e2e": "protractor"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "^5.0.3",
+    "@angular/compiler": "^5.0.3",
+    "@angular/core": "^5.0.3",
+    "@angular/forms": "^5.0.3",
+    "@angular/http": "^5.0.3",
+    "@angular/platform-browser": "^5.0.3",
+    "@angular/platform-browser-dynamic": "^5.0.3",
+    "@angular/router": "^5.0.3",
+    "body-parser": "^1.18.2",
+    "core-js": "^2.5.1",
+    "express": "^4.16.2",
+    "rxjs": "^5.5.2",
+    "ts-helpers": "^1.1.2",
+    "zone.js": "^0.8.18"
+  },
+  "devDependencies": {
+    "@angular/compiler-cli": "^5.0.3",
+    "@types/jasmine": "2.8.2",
+    "@types/node": "^8.0.53",
+    "angular-cli": "1.0.0-beta.28.3",
+    "codelyzer": "~4.0.1",
+    "jasmine-core": "2.8.0",
+    "jasmine-spec-reporter": "4.2.1",
+    "karma": "1.7.1",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-cli": "^1.0.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-remap-istanbul": "^0.6.0",
+    "protractor": "~5.2.0",
+    "ts-node": "3.3.0",
+    "tslint": "^5.8.0",
+    "typescript": "~2.6.2"
+  }
+}
