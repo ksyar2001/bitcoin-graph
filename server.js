@@ -88,14 +88,14 @@ worker.connect(function(){
  
 worker.on('start',           function(){ console.log("worker started"); });
 worker.on('end',             function(){ console.log("worker ended"); });
-worker.on('cleaning_worker', function(worker, pid){ console.log("cleaning old worker " + worker); });
-worker.on('poll',            function(queue){ console.log("worker polling " + queue); });
-worker.on('job',             function(queue, job){ console.log("working job " + queue + " " + JSON.stringify(job)); });
-worker.on('reEnqueue',       function(queue, job, plugin){ console.log("reEnqueue job (" + plugin + ") " + queue + " " + JSON.stringify(job)); });
-worker.on('success',         function(queue, job, result){ console.log("job success " + queue + " " + JSON.stringify(job) + " >> " + result); });
-worker.on('failure',         function(queue, job, failure){ console.log("job failure " + queue + " " + JSON.stringify(job) + " >> " + failure); });
-worker.on('error',           function(queue, job, error){ console.log("error " + queue + " " + JSON.stringify(job) + " >> " + error); });
-worker.on('pause',           function(){ console.log("worker paused"); });
+// worker.on('cleaning_worker', function(worker, pid){ console.log("cleaning old worker " + worker); });
+// worker.on('poll',            function(queue){ console.log("worker polling " + queue); });
+// worker.on('job',             function(queue, job){ console.log("working job " + queue + " " + JSON.stringify(job)); });
+// worker.on('reEnqueue',       function(queue, job, plugin){ console.log("reEnqueue job (" + plugin + ") " + queue + " " + JSON.stringify(job)); });
+// worker.on('success',         function(queue, job, result){ console.log("job success " + queue + " " + JSON.stringify(job) + " >> " + result); });
+// worker.on('failure',         function(queue, job, failure){ console.log("job failure " + queue + " " + JSON.stringify(job) + " >> " + failure); });
+// worker.on('error',           function(queue, job, error){ console.log("error " + queue + " " + JSON.stringify(job) + " >> " + error); });
+// worker.on('pause',           function(){ console.log("worker paused"); });
  
 ////////////////////////
 // CONNECT TO A QUEUE //
@@ -105,10 +105,10 @@ var queue = new NR.queue({connection: connectionDetails}, jobs);
 queue.on('error', function(error){ console.log(error); });
 queue.connect(function(){
 });
-setInterval(function() {
-  queue.enqueue('math', "add", [1,2]);
-  queue.enqueue('math', "add", [101,102]);
-}, 5000)
+// setInterval(function() {
+//   queue.enqueue('math', "add", [1,2]);
+//   queue.enqueue('math', "add", [101,102]);
+// }, 5000)
 
 
 // Get our API routes
@@ -129,6 +129,12 @@ app.set('port', port);
  * Create HTTP server.
  */
 const server = http.createServer(app);
+
+var io = require('socket.io')(server);
+io.on('connection', (socket) => {
+  console.log("Client connected");
+  io.emit('message', {type:'new-message', text:"body"});
+});
 
 /**
  * Listen on provided port, on all network interfaces.

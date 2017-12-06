@@ -17,6 +17,12 @@
 // });
 
 // module.exports = router;
+const http = require('request-promise')
+const options = {
+	method: 'GET',
+	uri: 'https://bittrex.com/api/v1.1/public/getticker?market=usdt-btc',
+	json: true
+}
 
 module.exports = function(app) {
 	app.get('/api/', (req, res) => {
@@ -24,7 +30,7 @@ module.exports = function(app) {
 	});
 
 	app.get('/api/posts', (req, res) => {
-		res.status(200).json({userid: "123", pwd: "123"});
+		http(options).then(response => res.status(200).json(response));
 	});
 
 	app.get('/api/test', function(req, res) {
