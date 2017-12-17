@@ -1,0 +1,29 @@
+<div class="table-wrapper">
+	<cdk-table #table [dataSource]="dataSource" class="table">
+
+    <ng-container cdkColumnDef="market">
+      <cdk-header-cell *cdkHeaderCellDef class="header-cell"> Market </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row" class="cell"> {{row.market}} </cdk-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="value">
+      <cdk-header-cell *cdkHeaderCellDef class="header-cell"> ExchangeRate </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row" class="cell"> ${{row.value}} </cdk-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="action">
+      <cdk-header-cell *cdkHeaderCellDef class="header-cell"> Action </cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row" class="cell"> {{row.action}} </cdk-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="change">
+      <cdk-header-cell *cdkHeaderCellDef class="header-cell">Change</cdk-header-cell>
+      <cdk-cell *cdkCellDef="let row" class="cell">
+        ${{row.change}}
+      </cdk-cell>
+    </ng-container>
+
+    <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="header-row"></cdk-header-row>
+    <cdk-row *cdkRowDef="let row; columns: displayedColumns;" class="row"></cdk-row>
+  </cdk-table>
+</div>

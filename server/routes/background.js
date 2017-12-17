@@ -70,15 +70,22 @@ module.exports = function(io){
     worker.on('end', function(){ console.log("worker ended"); }); 
     worker.on('success', function(queue, job, result){
       console.log("job success " + queue + " " + " >> " + JSON.stringify(result));
+      //send the result to the client
       io.emit('message', result);
     });
 
     var queue = new NR.queue({connection: this.connectionDetails}, this.jobs);
-    queue.on('error', function(error){ console.log(error); });
-    queue.connect(function(){ console.log("QUEUE CONNECTED") });
+    queue.on('error', function(error){
+      console.log("Setting Timeout");
+      setTimeout(function(){worker.start();}, 10000);
+    });
+    queue.connect(function(){
+      console.log("QUEUE CONNECTED")
+    });
 
     setInterval(function() {
       console.log("Calling the API");
+      queue.length("api", function(error, num){console.log("Current Jobs in the Queue: " + num)})
       queue.enqueue('Api', "callApi", ["bittrex"]);
       queue.enqueue('Api', "callApi", ["liqui"]);
       queue.enqueue('Api', "callApi", ["bitfinex"]);

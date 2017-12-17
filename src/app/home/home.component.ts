@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { HttpService } from '../shared/services/HttpClient';
 import { ServerService } from '../shared/services/server.service';
 import * as d3 from 'd3-selection';
@@ -15,11 +15,11 @@ import 'd3-transition';
 export class HomeComponent implements OnInit {
 	private width: number;
   	private height: number;
-  	private margin = {top: 20, right: 20, bottom: 30, left: 100};
+  	private margin = {top: 50, right: 50, bottom: 30, left: 50};
   	private STATISTICS = [
-	  {market: "liqui", frequency: 14000},
-	  {market: "bittrex", frequency: 10000},
-	  {market: "bitfinex", frequency: 10000},
+	  {market: "liqui", value: 15000, action: "bid", change: 0},
+	  {market: "bittrex", value: 15000, action: "bid", change: 0},
+	  {market: "bitfinex", value: 15000, action: "bid", change: 0},
 	  ];
 
   	private x: any;
@@ -29,12 +29,7 @@ export class HomeComponent implements OnInit {
 
 
   constructor(private server: ServerService) {
-  	// this.server.getResponse().subscribe(res => console.log(res));
   }
-
-  // ngOnInit() {
-  // 	this.server.getResponse().subscribe(res => console.log(res))
-  // }
 
   ngOnInit() {
   	this.server.getMessages().subscribe(message => this.loadNewData(message));
@@ -56,7 +51,7 @@ export class HomeComponent implements OnInit {
     this.x = d3Scale.scaleBand().rangeRound([0, this.width]).padding(0.1);
     this.y = d3Scale.scaleLinear().rangeRound([this.height, 0]);
     this.x.domain(this.STATISTICS.map((d) => d.market));
-    this.y.domain([13500, d3Array.max(this.STATISTICS, (d) => d.frequency)]);
+    this.y.domain([d3Array.min(this.STATISTICS, (d) => d.value - (d.value % 100)-100), d3Array.max(this.STATISTICS, (d) => Math.round(d.value/100)*100)]);
   }
 
   private drawAxis() {
@@ -73,7 +68,7 @@ export class HomeComponent implements OnInit {
     .attr("y", 6)
     .attr("dy", "0.71em")
     .attr("text-anchor", "end")
-    .text("Frequency");
+    .text("value");
   }
 
   private drawBars() {
@@ -83,13 +78,21 @@ export class HomeComponent implements OnInit {
     .attr("class", "bar")
     .attr("fill", "steelblue")
     .attr("x", (d) => this.x(d.market) )
-    .attr("y", (d) => this.y(d.frequency) )
+    .attr("y", (d) => this.y(d.value) )
     .attr("width", this.x.bandwidth())
-    .attr("height", (d) => this.height - this.y(d.frequency) );
+    .attr("height", (d) => this.height - this.y(d.value) );
   }
 
   private makeTransition() {
-  	var sorted = this.x.domain(this.STATISTICS.sort((a, b) => b.frequency - a.frequency)
+  	//transition y-axis
+  	this.y.domain([d3Array.min(this.STATISTICS, (d) => d.value - (d.value % 100)-100), d3Array.max(this.STATISTICS, (d) => Math.round(d.value/100)*100)]);
+  	this.g.select(".y")
+  	.transition()
+  	.call(d3Axis.axisLeft(this.y).ticks(10))
+
+
+  	//set new x-axis
+  	var sorted = this.x.domain(this.STATISTICS.sort((a, b) => b.value - a.value)
   	.map((d) => d.market)).copy();
   	
   	var transition = this.g.transition().duration(750)
@@ -104,15 +107,19 @@ export class HomeComponent implements OnInit {
 	  .transition()
 	  .duration(750)
 	  .attr("x", (d) => this.x(d.market) )
-	  .attr("y", (d) => this.y(d.frequency) )
+	  .attr("y", (d) => this.y(d.value) )
 	  .attr("width", this.x.bandwidth())
-	  .attr("height", (d) => this.height - this.y(d.frequency) );
+	  .attr("height", (d) => this.height - this.y(d.value) );
 	}
 
 	loadNewData(newData) {
 		this.STATISTICS.forEach(stat => {
 			if (stat.market == newData.exchange) {
-				stat.frequency = parseInt(newData.price) || newData.Bid;
+        var old_value = stat.value;
+				var new_value = parseInt(newData.price) || newData.Bid;
+        stat.value = new_value;
+        stat.action = newData.type || "Bid";
+        stat.change = new_value - old_value;
 			}
 		});
 		this.makeTransition();

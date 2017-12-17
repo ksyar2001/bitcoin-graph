@@ -1,0 +1,33 @@
+.table-wrapper {
+  display: block;
+  padding: 4vh 8vw 4vh 8vw;
+}
+
+.table {
+  flex: 1 1 auto;
+  overflow: auto;
+  max-height: 500px;
+}
+
+.header-row, .row {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+  align-items: center;
+  height: 4vh;
+  padding: 0 8px;
+}
+
+.cell, .header-cell {
+  flex: 1;
+}
+
+.header-cell {
+  font-size: 12px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.cell {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.87);
+}
