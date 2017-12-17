@@ -25,6 +25,10 @@
     "@angular/platform-browser": "^5.0.3",
     "@angular/platform-browser-dynamic": "^5.0.3",
     "@angular/router": "^5.0.3",
+    "@types/node": "^8.0.53",
+    "ts-node": "3.3.0",
+    "tslint": "^5.8.0",
+    "typescript": "~2.6.2",
     "angular-cli": "1.0.0-beta.28.3",
     "@angular/compiler-cli": "^5.0.3",
     "body-parser": "^1.18.2",
@@ -47,7 +51,6 @@
   },
   "devDependencies": {
     "@types/jasmine": "2.8.2",
-    "@types/node": "^8.0.53",
     "codelyzer": "~4.0.1",
     "jasmine-core": "2.8.0",
     "jasmine-spec-reporter": "4.2.1",
@@ -57,8 +60,5 @@
     "karma-jasmine": "^1.1.0",
     "karma-remap-istanbul": "^0.6.0",
     "protractor": "~5.2.0",
-    "ts-node": "3.3.0",
-    "tslint": "^5.8.0",
-    "typescript": "~2.6.2"
   }
 }
