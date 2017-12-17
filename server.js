@@ -24,11 +24,6 @@ app.use(express.static(path.join(__dirname, 'dist')));
 // Get our API routes
 require('./server/routes/api')(app);
 
-// Catch all other routes and return the index file
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'dist/index.html'));
-// });
-
 /**
  * Get port from environment and store in Express.
  */
@@ -48,6 +43,11 @@ io.on('connection', (socket) => {
 var background = require('./server/routes/background');
 var queue = new background(io);
 queue.initialize();
+
+//send everything else to index.html
+app.get('*', (req, res) => {
+	res.sendFile(path.join(__dirname, 'dist/index.html'));
+});
 
 /**
  * Listen on provided port, on all network interfaces.

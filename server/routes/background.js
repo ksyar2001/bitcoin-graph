@@ -23,7 +23,7 @@ const api_list = {
 module.exports = function(io){
   this.connectionDetails = {
     pkg:       'ioredis',
-    host:      '127.0.0.1',
+    host:      process.env.REDIS_URL,
     password:  null,
     port:      6379,
     database:  0,
@@ -58,7 +58,7 @@ module.exports = function(io){
   this.initialize = function() {
     var client = redis.createClient();
     client.on('connect', function() {
-      console.log('redis-Ready');
+      console.log('Redis Client Connected');
     })
     
     var worker = new NR.worker({connection: client, queues: ['Api']}, this.jobs);
@@ -80,11 +80,11 @@ module.exports = function(io){
       setTimeout(function(){worker.start();}, 10000);
     });
     queue.connect(function(){
-      console.log("QUEUE CONNECTED")
+      console.log("Queue Connected")
     });
 
     setInterval(function() {
-      console.log("Calling the API");
+      console.log("Calling the APIs");
       queue.length("api", function(error, num){console.log("Current Jobs in the Queue: " + num)})
       queue.enqueue('Api', "callApi", ["bittrex"]);
       queue.enqueue('Api', "callApi", ["liqui"]);
