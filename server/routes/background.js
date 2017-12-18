@@ -61,7 +61,7 @@ module.exports = function(io){
       console.log(`Redis client running at ${process.env.REDIS_URL}`);
     })
     
-    var worker = new NR.worker({connection: client, queues: ['Api']}, this.jobs);
+    var worker = new NR.worker({connection: this.connectionDetails, queues: ['Api']}, this.jobs);
     worker.connect(function() {
     worker.workerCleanup(); // optional: cleanup any previous improperly shutdown workers on this host
     worker.start();
