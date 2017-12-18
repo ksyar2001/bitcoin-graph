@@ -23,7 +23,7 @@ const api_list = {
 module.exports = function(io){
   this.connectionDetails = {
     pkg:       'ioredis',
-    host:      process.env.HOST_URL | '127.0.0.1'
+    host:      process.env.HOST_URL | '127.0.0.1',
     password:  null,
     port:      process.env.REDIS_PORT | 6379,
     database:  0,
