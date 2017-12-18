@@ -56,8 +56,8 @@ module.exports = function(io){
   };
     
   this.initialize = function() {
-    console.log(this.connectionDetails);
     var client = redis.createClient(process.env.REDIS_URL);
+    var connectionDetails = {redis: client}
     client.on('connect', function() {
       console.log(`Redis client running at ${process.env.REDIS_URL}`);
     })
@@ -76,7 +76,7 @@ module.exports = function(io){
     });
     worker.on('error', (error, queue, job) => { console.log(`error ${queue} ${JSON.stringify(job)}  >> ${error}`) })
     
-    var queue = new NR.queue({connection: this.connectionDetails}, this.jobs);
+    var queue = new NR.queue({connection: connectionDetails}, this.jobs);
     queue.on('error', function(error){
       console.log("Setting Timeout");
       setTimeout(function(){worker.start();}, 10000);
