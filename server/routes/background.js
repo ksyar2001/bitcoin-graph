@@ -21,13 +21,16 @@ const api_list = {
 };
 
 module.exports = function(io){
-  this.connectionDetails = {
-    pkg:       'ioredis',
-    host:      process.env.REDIS_URL,
-    password:  null,
-    port:      process.env.REDIS_PORT | 6379,
-    database:  0,
-  };
+  // this.connectionDetails = {
+  //   pkg:       'ioredis',
+  //   host:      process.env.REDIS_URL,
+  //   password:  null,
+  //   port:      process.env.REDIS_PORT | 6379,
+  //   database:  0,
+  // };
+  // var redisClient = new Redis()
+
+  // this.connectionDetails = {redis: }
 
   this.jobs = {
     "callApi": {
@@ -74,7 +77,7 @@ module.exports = function(io){
       io.emit('message', result);
     });
 
-    var queue = new NR.queue({connection: this.connectionDetails}, this.jobs);
+    var queue = new NR.queue({connection: client}, this.jobs);
     queue.on('error', function(error){
       console.log("Setting Timeout");
       setTimeout(function(){worker.start();}, 10000);

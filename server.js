@@ -56,5 +56,4 @@ app.get('*', (req, res) => {
  */
 server.listen(port, () => {
 	console.log(`API running on port:${port}`);
-	console.log(`Redis at ${process.env.REDIS_URL}:${process.env.REDIS_PORT}`);
 });
