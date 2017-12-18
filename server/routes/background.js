@@ -76,6 +76,7 @@ module.exports = function(io){
     });
     worker.on('error', (error, queue, job) => { console.log(`error ${queue} ${JSON.stringify(job)}  >> ${error}`) })
     
+    console.log(connectionDetails);
     var queue = new NR.queue({connection: connectionDetails}, this.jobs);
     queue.on('error', function(error){
       console.log("Setting Timeout");
