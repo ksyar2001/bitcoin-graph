@@ -56,9 +56,9 @@ module.exports = function(io){
   };
     
   this.initialize = function() {
-    var client = redis.createClient();
+    var client = redis.createClient(process.env.REDIS_URL);
     client.on('connect', function() {
-      console.log('Redis Client Connected');
+      console.log(`Redis client running at ${process.env.REDIS_URL}`);
     })
     
     var worker = new NR.worker({connection: client, queues: ['Api']}, this.jobs);
