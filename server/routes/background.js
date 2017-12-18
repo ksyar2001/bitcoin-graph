@@ -60,7 +60,7 @@ module.exports = function(io){
     client.on('connect', function() {
       console.log(`Redis client running at ${process.env.REDIS_URL}`);
 
-      var queue = new NR.queue({connection: {redis:client}}}, this.jobs);
+      var queue = new NR.queue({connection: {redis:client}}, this.jobs);
       queue.on('error', function(error){
         console.log("Setting Timeout");
         setTimeout(function(){worker.start();}, 10000);
