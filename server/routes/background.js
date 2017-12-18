@@ -57,9 +57,25 @@ module.exports = function(io){
     
   this.initialize = function() {
     var client = redis.createClient(process.env.REDIS_URL);
-    var connectionDetails = {redis: client}
     client.on('connect', function() {
       console.log(`Redis client running at ${process.env.REDIS_URL}`);
+
+      var queue = new NR.queue({connection: {redis:client}}}, this.jobs);
+      queue.on('error', function(error){
+        console.log("Setting Timeout");
+        setTimeout(function(){worker.start();}, 10000);
+      });
+      queue.connect(function(){
+        console.log("Queue Connected")
+      });
+
+      setInterval(function() {
+        console.log("Calling the APIs");
+        queue.length("api", function(error, num){console.log("Current Jobs in the Queue: " + num)})
+        queue.enqueue('Api', "callApi", ["bittrex"]);
+        queue.enqueue('Api', "callApi", ["liqui"]);
+        queue.enqueue('Api', "callApi", ["bitfinex"]);
+      }, 5000)
     })
     
     var worker = new NR.worker({connection: client, queues: ['Api']}, this.jobs);
@@ -75,23 +91,5 @@ module.exports = function(io){
       io.emit('message', result);
     });
     worker.on('error', (error, queue, job) => { console.log(`error ${queue} ${JSON.stringify(job)}  >> ${error}`) })
-    
-    console.log(connectionDetails);
-    var queue = new NR.queue({connection: connectionDetails}, this.jobs);
-    queue.on('error', function(error){
-      console.log("Setting Timeout");
-      setTimeout(function(){worker.start();}, 10000);
-    });
-    queue.connect(function(){
-      console.log("Queue Connected")
-    });
-
-    setInterval(function() {
-      console.log("Calling the APIs");
-      queue.length("api", function(error, num){console.log("Current Jobs in the Queue: " + num)})
-      queue.enqueue('Api', "callApi", ["bittrex"]);
-      queue.enqueue('Api', "callApi", ["liqui"]);
-      queue.enqueue('Api', "callApi", ["bitfinex"]);
-    }, 5000)
   }
 }
