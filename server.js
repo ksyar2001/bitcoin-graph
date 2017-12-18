@@ -55,5 +55,6 @@ app.get('*', (req, res) => {
  * Listen on provided port, on all network interfaces.
  */
 server.listen(port, () => {
-	console.log(`API running on localhost:${port}`);
+	console.log(`API running on port:${port}`);
+	console.log(`Redis at ${process.env.REDIS_URL}`);
 });
