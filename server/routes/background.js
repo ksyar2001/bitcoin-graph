@@ -69,6 +69,21 @@ module.exports = function(io){
         console.log("Queue Connected")
       });
 
+      var worker = new NR.worker({connection: client, queues: ['Api']}, this.jobs);
+      worker.connect(function() {
+      worker.workerCleanup(); // optional: cleanup any previous improperly shutdown workers on this host
+      worker.start();
+    });
+    
+      worker.on('start', function(){ console.log("worker started"); });
+      worker.on('end', function(){ console.log("worker ended"); }); 
+      worker.on('success', function(queue, job, result){
+        console.log("job success " + queue + " " + " >> " + JSON.stringify(result));
+        //send the result to the client
+        io.emit('message', result);
+      });
+      worker.on('error', (error, queue, job) => { console.log(`error ${queue} ${JSON.stringify(job)}  >> ${error}`) })
+
       setInterval(function() {
         console.log("Calling the APIs");
         queue.length("api", function(error, num){console.log("Current Jobs in the Queue: " + num)})
@@ -77,19 +92,5 @@ module.exports = function(io){
         queue.enqueue('Api', "callApi", ["bitfinex"]);
       }, 5000)
     })
-    
-    var worker = new NR.worker({connection: client, queues: ['Api']}, this.jobs);
-    worker.connect(function() {
-    worker.workerCleanup(); // optional: cleanup any previous improperly shutdown workers on this host
-    worker.start();
-  });
-    worker.on('start', function(){ console.log("worker started"); });
-    worker.on('end', function(){ console.log("worker ended"); }); 
-    worker.on('success', function(queue, job, result){
-      console.log("job success " + queue + " " + " >> " + JSON.stringify(result));
-      //send the result to the client
-      io.emit('message', result);
-    });
-    worker.on('error', (error, queue, job) => { console.log(`error ${queue} ${JSON.stringify(job)}  >> ${error}`) })
   }
 }
