@@ -14,6 +14,8 @@ app.use(function(req, res, next) {
 	next();
 });
 
+require('dotenv').config()
+
 // Parsers for POST data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
