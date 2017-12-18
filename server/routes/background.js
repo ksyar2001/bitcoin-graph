@@ -25,7 +25,7 @@ module.exports = function(io){
     pkg:       'ioredis',
     host:      process.env.REDIS_URL,
     password:  null,
-    port:      6379,
+    port:      process.env.REDIS_PORT | 6379,
     database:  0,
   };
 
