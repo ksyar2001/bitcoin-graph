@@ -23,7 +23,7 @@ const api_list = {
 module.exports = function(io){
   this.connectionDetails = {
     pkg:       'ioredis',
-    host:      process.env.HOST_URL | '127.0.0.1',
+    host:      'secure-beach-35250.herokuapp.com',
     password:  null,
     port:      process.env.REDIS_PORT | 6379,
     database:  0,
@@ -56,12 +56,13 @@ module.exports = function(io){
   };
     
   this.initialize = function() {
-    var client = redis.createClient(process.env.REDIS_URL);
+    console.log(this.connectionDetails);
+    var client = redis.createClient();
     client.on('connect', function() {
       console.log(`Redis client running at ${process.env.REDIS_URL}`);
     })
     
-    var worker = new NR.worker({connection: this.connectionDetails, queues: ['Api']}, this.jobs);
+    var worker = new NR.worker({connection: client, queues: ['Api']}, this.jobs);
     worker.connect(function() {
     worker.workerCleanup(); // optional: cleanup any previous improperly shutdown workers on this host
     worker.start();
