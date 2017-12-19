@@ -1,4 +1,3 @@
-const redis = require('redis');
 const NR = require('node-resque');
 const http = require('request-promise')
 
@@ -20,14 +19,7 @@ const api_list = {
   }
 };
 
-module.exports = function(io){
-  this.connectionDetails = {
-    pkg:       'ioredis',
-    host:      'secure-beach-35250.herokuapp.com',
-    password:  null,
-    port:      process.env.REDIS_PORT | 6379,
-    database:  0,
-  };
+module.exports = function(io, client){
 
   this.jobs = {
     "callApi": {
@@ -56,11 +48,8 @@ module.exports = function(io){
   };
     
   this.initialize = function() {
-    var client = redis.createClient(process.env.REDIS_URL);
-    client.on('connect', function() {
-      console.log(`Redis client running at ${process.env.REDIS_URL}`);
 
-      var queue = new NR.queue({connection: {redis:client}}, this.jobs);
+    var queue = new NR.queue({connection: {redis:client}}, this.jobs);
       queue.on('error', function(error){
         console.log("Setting Timeout");
         setTimeout(function(){worker.start();}, 10000);
@@ -75,22 +64,21 @@ module.exports = function(io){
       worker.start();
     });
     
-      worker.on('start', function(){ console.log("worker started"); });
-      worker.on('end', function(){ console.log("worker ended"); }); 
-      worker.on('success', function(queue, job, result){
-        console.log("job success " + queue + " " + " >> " + JSON.stringify(result));
-        //send the result to the client
-        io.emit('message', result);
-      });
-      worker.on('error', (error, queue, job) => { console.log(`error ${queue} ${JSON.stringify(job)}  >> ${error}`) })
+    worker.on('start', function(){ console.log("worker started"); });
+    worker.on('end', function(){ console.log("worker ended"); }); 
+    worker.on('success', function(queue, job, result){
+      console.log("job success " + queue + " " + " >> " + JSON.stringify(result));
+      //send the result to the client
+      io.emit('message', result);
+    });
+    worker.on('error', (error, queue, job) => { console.log(`error ${queue} ${JSON.stringify(job)}  >> ${error}`) })
 
-      setInterval(function() {
+    setInterval(function() {
         console.log("Calling the APIs");
         queue.length("api", function(error, num){console.log("Current Jobs in the Queue: " + num)})
         queue.enqueue('Api', "callApi", ["bittrex"]);
         queue.enqueue('Api', "callApi", ["liqui"]);
         queue.enqueue('Api', "callApi", ["bitfinex"]);
       }, 5000)
-    })
   }
 }

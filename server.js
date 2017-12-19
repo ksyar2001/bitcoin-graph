@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 const http = require('http');
 const bodyParser = require('body-parser');
+const redis = require('redis');
 
 const app = express();
 
@@ -42,8 +43,13 @@ io.on('connection', (socket) => {
   console.log("Client connected");
 });
 
+var client = redis.createClient(process.env.REDIS_URL);
+client.on('connect', function() {
+    console.log(`Redis client running at ${process.env.REDIS_URL}`);
+})
+
 var background = require('./server/routes/background');
-var queue = new background(io);
+var queue = new background(io, client);
 queue.initialize();
 
 //send everything else to index.html
