@@ -58,7 +58,7 @@ module.exports = function(io, client){
         console.log("Queue Connected")
       });
 
-      var worker = new NR.worker({connection: client, queues: ['Api']}, this.jobs);
+      var worker = new NR.worker({connection: {redis:client}, queues: ['Api']}, this.jobs);
       worker.connect(function() {
       worker.workerCleanup(); // optional: cleanup any previous improperly shutdown workers on this host
       worker.start();
