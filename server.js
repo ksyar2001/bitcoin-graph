@@ -43,8 +43,8 @@ io.on('connection', (socket) => {
   console.log("Client connected");
 });
 
-// var client = redis.createClient(process.env.REDIS_URL);
-var client = redis.createClient();
+var client = redis.createClient(process.env.REDIS_URL);
+// var client = redis.createClient();
 client.on('connect', function() {
     console.log(`Redis client running at ${process.env.REDIS_URL}`);
 })
