@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
 	private width: number;
   	private height: number;
   	private margin = {top: 50, right: 50, bottom: 30, left: 50};
-  	private STATISTICS = [
+  	public STATISTICS = [
 	  {market: "liqui", value: 15000, action: "bid", change: 0},
 	  {market: "bittrex", value: 15000, action: "bid", change: 0},
 	  {market: "bitfinex", value: 15000, action: "bid", change: 0},
