@@ -66,19 +66,27 @@ module.exports = function(io, client){
     
     worker.on('start', function(){ console.log("worker started"); });
     worker.on('end', function(){ console.log("worker ended"); }); 
-    worker.on('success', function(queue, job, result){
-      console.log("job success " + queue + " " + " >> " + JSON.stringify(result));
+    worker.on('success', function(queue_name, job, result){
+      queue.length("Api", function(error, num){console.log("Current Jobs in the Queue: " + num)})
+      console.log("job success " + queue_name + " " + " >> " + JSON.stringify(result));
       //send the result to the client
       io.emit('message', result);
+      setTimeout(() => {
+        queue.enqueue('Api', 'callApi', [result.exchange])  
+      }, 5000);
     });
-    worker.on('error', (error, queue, job) => { console.log(`error ${queue} ${JSON.stringify(job)}  >> ${error}`) })
+    worker.on('error', (error, queue, job) => { console.log(`error ${queue} ${JSON.stringify(job)}  >> ${error}`) });
 
-    setInterval(function() {
-        console.log("Calling the APIs");
-        queue.length("api", function(error, num){console.log("Current Jobs in the Queue: " + num)})
-        queue.enqueue('Api', "callApi", ["bittrex"]);
-        queue.enqueue('Api', "callApi", ["liqui"]);
-        queue.enqueue('Api', "callApi", ["bitfinex"]);
-      }, 5000)
+    queue.enqueue('Api', "callApi", ["bittrex"]);
+    queue.enqueue('Api', "callApi", ["liqui"]);
+    queue.enqueue('Api', "callApi", ["bitfinex"]);
+
+    // setInterval(function() {
+    //     console.log("Calling the APIs");
+    //     queue.length("Api", function(error, num){console.log("Current Jobs in the Queue: " + num)})
+    //     queue.enqueue('Api', "callApi", ["bittrex"]);
+    //     queue.enqueue('Api', "callApi", ["liqui"]);
+    //     queue.enqueue('Api', "callApi", ["bitfinex"]);
+    //   }, 5000)
   }
 }
