@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit {
     this.x = d3Scale.scaleBand().rangeRound([0, this.width]).padding(0.1);
     this.y = d3Scale.scaleLinear().rangeRound([this.height, 0]);
     this.x.domain(this.STATISTICS.map((d) => d.market));
-    this.y.domain([d3Array.min(this.STATISTICS, (d) => d.value - (d.value % 100)-100), d3Array.max(this.STATISTICS, (d) => Math.round(d.value/100)*100)]);
+    this.y.domain([d3Array.min(this.STATISTICS, (d) => d.value - (d.value % 100)-100), d3Array.max(this.STATISTICS, (d) => Math.ceil(d.value/100)*100)]);
   }
 
   private drawAxis() {
