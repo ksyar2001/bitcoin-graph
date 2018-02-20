@@ -1,9 +1,9 @@
 # BitcoinGraph
-Deployed version on Heroku
-https://secure-beach-35250.herokuapp.com/
+**Deployed version on Heroku
+https://secure-beach-35250.herokuapp.com/**
 
 ## To To List
-- [ ] Stop queueing when it reaches the API limit error
+- [x] Stop queueing when it reaches the API limit error
 
 ## Development server
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
